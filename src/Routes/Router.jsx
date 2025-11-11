@@ -12,6 +12,7 @@ import PrivateRouter from '../Components/PrivateRoute/PrivateRoute';
 import JobDetails from '../Pages/JobDetails/JobDetails';
 import AddJob from '../Pages/AddJob/AddJob';
 import UpdateJob from '../Pages/UpdateJob/UpdateJob';
+import MyPostedJobs from '../Pages/MyPostedJobs/MyPostedJobs';
 
 const router = createBrowserRouter([
     {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
             {
                 path: '/update-job/:id',
                 element:<PrivateRouter><UpdateJob></UpdateJob></PrivateRouter>
+            },
+            {
+                path: '/my-posted-jobs',
+                element:<PrivateRouter><MyPostedJobs></MyPostedJobs></PrivateRouter>
             },
             {
                 path: '/my-task',
