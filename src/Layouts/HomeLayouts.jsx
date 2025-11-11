@@ -5,7 +5,7 @@ import Navbar from '../Components/Navbar/Navbar';
 const HomeLayouts = () => {
     return (
         <>
-            <header>
+            <header className='sticky top-0 z-50 shadow-md'>
                 <Navbar></Navbar>
             </header>
             <Outlet></Outlet>

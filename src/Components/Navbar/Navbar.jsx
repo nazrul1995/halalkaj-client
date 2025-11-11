@@ -2,14 +2,13 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Link, NavLink } from 'react-router';
 import { AuthContext } from '../Provider/AuthContext';
 import { IoLogIn, IoLogOut } from 'react-icons/io5';
-//import { FaGear, FaUser } from 'react-icons/fa';
+import { FaGear, FaUser } from 'react-icons/fa6';
 import Swal from 'sweetalert2';
-import { FaGear } from 'react-icons/fa6';
-import { FaUser } from 'react-icons/fa';
 
 const Navbar = () => {
   const { user, LogOutUser } = useContext(AuthContext);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -41,7 +40,9 @@ const Navbar = () => {
     <>
       <NavLink
         className={({ isActive }) =>
-          `mr-3 px-2 py-1 rounded hover:bg-blue-100 ${isActive ? 'font-bold text-blue-600' : ''}`
+          `block px-2 py-1 rounded hover:bg-blue-100 ${
+            isActive ? 'font-bold text-blue-600' : ''
+          }`
         }
         to="/"
       >
@@ -49,7 +50,9 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         className={({ isActive }) =>
-          `mr-3 px-2 py-1 rounded hover:bg-blue-100 ${isActive ? 'font-bold text-blue-600' : ''}`
+          `block px-2 py-1 rounded hover:bg-blue-100 ${
+            isActive ? 'font-bold text-blue-600' : ''
+          }`
         }
         to="/all-jobs"
       >
@@ -57,7 +60,9 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         className={({ isActive }) =>
-          `mr-3 px-2 py-1 rounded hover:bg-blue-100 ${isActive ? 'font-bold text-blue-600' : ''}`
+          `block px-2 py-1 rounded hover:bg-blue-100 ${
+            isActive ? 'font-bold text-blue-600' : ''
+          }`
         }
         to="/add-job"
       >
@@ -65,7 +70,9 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         className={({ isActive }) =>
-          `mr-3 px-2 py-1 rounded hover:bg-blue-100 ${isActive ? 'font-bold text-blue-600' : ''}`
+          `block px-2 py-1 rounded hover:bg-blue-100 ${
+            isActive ? 'font-bold text-blue-600' : ''
+          }`
         }
         to="/my-task"
       >
@@ -75,38 +82,18 @@ const Navbar = () => {
   );
 
   return (
+    <div className='sticky'>
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="w-11/12 mx-auto flex items-center justify-between py-3">
-        {/* Logo & Mobile Menu */}
-        <div className="flex items-center gap-3">
-          <Link to="/" className="text-2xl font-bold text-blue-600">
-            HalalKaj
-          </Link>
-          <div className="lg:hidden dropdown">
-            <label tabIndex={0} className="btn btn-ghost p-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </label>
-            <ul
-              tabIndex={0}
-              className="menu dropdown-content mt-2 p-2 shadow bg-white rounded-box w-52 flex flex-col gap-1"
-            >
-              {links}
-            </ul>
-          </div>
-        </div>
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-bold text-blue-600">
+          HalalKaj
+        </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center gap-2">{links}</div>
+        <div className="hidden lg:flex items-center gap-3">{links}</div>
 
-        {/* User / Auth Section */}
+        {/* Right Side (Theme + User/Auth) */}
         <div className="flex items-center gap-3">
           {/* Theme Toggle */}
           <input
@@ -141,12 +128,6 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/my-models">My Models</Link>
-                </li>
-                <li>
-                  <Link to="/my-downloads">My Downloads</Link>
-                </li>
-                <li>
                   <Link to="/settings">
                     <FaGear className="inline mr-2" /> Settings
                   </Link>
@@ -154,7 +135,7 @@ const Navbar = () => {
                 <li>
                   <button
                     onClick={handleLogOut}
-                    className="btn btn-sm w-full mt-2 bg-linear-to-r from-pink-500 to-red-500 text-white"
+                    className="btn btn-sm w-full mt-2 bg-gradient-to-r from-pink-500 to-red-500 text-white"
                   >
                     <IoLogOut className="inline mr-1" /> Logout
                   </button>
@@ -165,7 +146,7 @@ const Navbar = () => {
             <>
               <Link
                 to="/login"
-                className="btn btn-sm bg-linear-to-r from-blue-500 to-indigo-600 text-white rounded-full flex items-center gap-1"
+                className="btn btn-sm bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full flex items-center gap-1"
               >
                 <IoLogIn /> Login
               </Link>
@@ -177,9 +158,38 @@ const Navbar = () => {
               </Link>
             </>
           )}
+
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden btn btn-ghost p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
         </div>
       </div>
-    </nav>
+
+      
+    </nav>{/* Mobile Menu (bottom of all items) */}
+      {menuOpen && (
+        <div className="lg:hidden bg-white w-11/12 mx-auto shadow-md py-3 border-t">
+          <div className="flex flex-col gap-2 px-4">{links}</div>
+        </div>
+      )}
+    </div>
   );
 };
 
