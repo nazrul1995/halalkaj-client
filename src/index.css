@@ -1,3 +1,10 @@
+
+
+
+* {
+  scroll-behavior: smooth;
+}
+
 .active{
     color: red;
 }
