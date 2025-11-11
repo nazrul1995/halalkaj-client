@@ -4,7 +4,7 @@ import { AuthContext } from '../../Components/Provider/AuthContext';
 
 const MyPostedJobs = () => {
     const {user} = use(AuthContext)
-      const [jobs, setJobs] = useState([]);
+    const [jobs, setJobs] = useState([]);
     
       useEffect(() => {
         fetch(`https://halalkaj-server.vercel.app/my-posted-jobs?email=${user.email}`)

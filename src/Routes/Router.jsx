@@ -6,13 +6,14 @@ import AllJobs from '../Pages/AllJobs/AllJobs';
 import LogIn from '../Pages/LogIn/LogIn';
 import Register from '../Pages/Register/Register';
 import ForgetPassword from '../Pages/ForgetPassword/ForgetPassword';
-
-import AcceptedTask from '../Pages/AcceptedTask/AcceptedTask';
 import PrivateRouter from '../Components/PrivateRoute/PrivateRoute';
 import JobDetails from '../Pages/JobDetails/JobDetails';
 import AddJob from '../Pages/AddJob/AddJob';
 import UpdateJob from '../Pages/UpdateJob/UpdateJob';
 import MyPostedJobs from '../Pages/MyPostedJobs/MyPostedJobs';
+import AcceptedTask from '../Pages/AcceptedTask/AcceptedTask';
+
+
 
 const router = createBrowserRouter([
     {
@@ -57,7 +58,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/my-task',
-                Component: AcceptedTask
+                element:<PrivateRouter><AcceptedTask></AcceptedTask></PrivateRouter>
             },
             {
                 path: '/forgot-password',

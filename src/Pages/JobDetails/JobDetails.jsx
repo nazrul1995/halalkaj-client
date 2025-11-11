@@ -75,7 +75,7 @@ const JobDetails = () => {
       accepted_by: user.email,
     };
 
-    fetch(`https://halalkaj-server.vercel.app/my-accepted-task/${id}`, {
+    fetch(`https://halalkaj-server.vercel.app/accepted-task-collection/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
