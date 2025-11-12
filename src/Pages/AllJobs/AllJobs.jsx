@@ -8,7 +8,7 @@ const [jobs, setJobs] = useState([]);
 const [sortOrder, setSortOrder] = useState('newest');
 
 useEffect(() => {
-  fetch(`https://halalkaj-server.vercel.app/allJobs?sort=${sortOrder}`)
+  fetch(`http://localhost:3000/allJobs?sort=${sortOrder}`)
     .then(res => res.json())
     .then(data => setJobs(data));
 }, [sortOrder]);

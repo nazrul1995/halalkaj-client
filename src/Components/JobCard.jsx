@@ -49,7 +49,7 @@ const JobCard = ({ job }) => {
         accepted_by: user.email,
       };
 
-      const res = await fetch(`https://halalkaj-server.vercel.app/accepted-task-collection`, {
+      const res = await fetch(`http://localhost:3000/accepted-task-collection`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

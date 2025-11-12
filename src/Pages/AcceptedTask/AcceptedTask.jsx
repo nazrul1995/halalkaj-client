@@ -8,7 +8,7 @@ const AcceptedTask = () => {
     const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
-        fetch(`https://halalkaj-server.vercel.app/my-accepted-tasks`, {
+        fetch(`http://localhost:3000/my-accepted-tasks/?email=${user.email}`, {
             headers: {
                 authorization: `Bearer ${user.accessToken}`,
             },
@@ -29,7 +29,7 @@ const AcceptedTask = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://halalkaj-server.vercel.app/task-action/${id}`, {
+        fetch(`http://localhost:3000/task-action/${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const AcceptedTask = () => {
 
     return (
         <div className='w-11/12 mx-auto py-10'>
-            <h3 className='text-3xl font-bold text-gray-800 mb-8 text-center'>Jobs By : {user.displayName}</h3>
+            <h3 className='text-3xl font-bold text-gray-800 mb-8 text-center'>{user.displayName} Accepted job</h3>
             <div className='grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
                 {jobs.map(job =>  <div key={job._id}  className="bg-white border border-gray-100 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 flex flex-col overflow-hidden group">
       {/* Cover Image */}

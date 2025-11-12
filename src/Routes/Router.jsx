@@ -27,7 +27,7 @@ const router = createBrowserRouter([
             {
                 path: '/all-jobs',
                 Component: AllJobs,
-                loader: () => fetch('https://halalkaj-server.vercel.app/allJobs')
+                loader: () => fetch('http://localhost:3000/allJobs')
             },
             {
                 path: '/all-jobs/:id',

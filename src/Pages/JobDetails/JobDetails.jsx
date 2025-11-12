@@ -14,7 +14,7 @@ const JobDetails = () => {
 
   useEffect(() => {
 
-    fetch(`https://halalkaj-server.vercel.app/allJobs/${id}`, {
+    fetch(`http://localhost:3000/allJobs/${id}`, {
       headers: {
         authorization: `Bearer ${user.accessToken}`,
       },
@@ -41,7 +41,7 @@ const JobDetails = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://halalkaj-server.vercel.app/deleteJob/${id}`, {
+        fetch(`http://localhost:3000/deleteJob/${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -66,22 +66,15 @@ const JobDetails = () => {
     });
   };
   const handleAcceptedTask = () => {
-    const addedTask = {
-      title: job.title,
-      category: job.category,
-      summary: job.summary,
-      coverImage: job.coverImage,
-      created_at: new Date(),
-      accepted_by: user.email,
-    };
+  
 
-    fetch(`https://halalkaj-server.vercel.app/accepted-task-collection/${id}`, {
+    fetch(`http://localhost:3000/accepted-task-collections`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${user.accessToken}`,
       },
-      body: JSON.stringify(addedTask),
+      body: JSON.stringify({...job, accepted_by: user.email}),
     })
       .then((res) => res.json())
       .then((data) => {
