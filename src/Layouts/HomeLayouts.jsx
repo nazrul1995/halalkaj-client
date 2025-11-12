@@ -1,14 +1,12 @@
 import React from 'react';
 import { Outlet } from 'react-router';
-import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
+import Header from '../Components/Header/Header';
 
 const HomeLayouts = () => {
     return (
         <>
-            <header className='sticky top-0 z-50 shadow-md'>
-                <Navbar></Navbar>
-            </header>
+            <Header></Header>
             <Outlet></Outlet>
             <Footer></Footer>
         </>

@@ -1,23 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./public/index.html",
-  ],
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        primary: '#5E17EB',
-        'primary-hover': '#4A12B8',
-        secondary: '#F97316',
+        testRed: "#ff0000",
       },
-      backgroundImage: {
-        'hero-gradient': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      keyframes: {
+        zoom: {
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(1.05)" }, // subtle zoom
+        },
       },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+      animation: {
+        zoom: "zoom 8s ease-in-out infinite alternate",
       },
     },
   },
   plugins: [],
-}
+};

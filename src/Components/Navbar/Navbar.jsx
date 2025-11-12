@@ -76,7 +76,7 @@ const Navbar = () => {
 
   return (
     <div className="sticky top-0 z-50">
-      <nav className="bg-white shadow-md">
+      <nav className="navbar shadow-md bg-transparent fixed top-0 left-0 w-full z-50">
         <div className="w-11/12 mx-auto flex items-center justify-between py-3">
           {/* Logo */}
           <Link to="/" className="text-2xl font-bold text-blue-600">
