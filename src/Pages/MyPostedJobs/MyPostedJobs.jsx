@@ -11,7 +11,7 @@ const MyPostedJobs = () => {
   // 🟢 Fetch jobs by user email
   useEffect(() => {
     if (!user?.email) return;
-    fetch(`http://localhost:3000/my-posted-jobs?email=${user.email}`)
+    fetch(`https://halalkaj-server.vercel.app/my-posted-jobs?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => {
         setJobs(data);
@@ -35,7 +35,7 @@ const MyPostedJobs = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/deleteJob/${id}`, {
+        fetch(`https://halalkaj-server.vercel.app/deleteJob/${id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())

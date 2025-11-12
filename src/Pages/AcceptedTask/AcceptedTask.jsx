@@ -8,7 +8,7 @@ const AcceptedTask = () => {
     const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/my-accepted-tasks/?email=${user.email}`, {
+        fetch(`https://halalkaj-server.vercel.app/my-accepted-tasks/?email=${user.email}`, {
             headers: {
                 authorization: `Bearer ${user.accessToken}`,
             },
@@ -29,7 +29,7 @@ const AcceptedTask = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/task-action/${id}`, {
+        fetch(`https://halalkaj-server.vercel.app/task-action/${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

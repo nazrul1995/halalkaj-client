@@ -5,7 +5,7 @@ const LatestJobs = () => {
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/latest-Jobs')
+    fetch('https://halalkaj-server.vercel.app/latest-Jobs')
       .then(res => res.json())
       .then(data => setJobs(data))
       .catch(err => console.error(err));

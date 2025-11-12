@@ -13,7 +13,7 @@ const UpdateJob = () => {
 
 
   useEffect(() => {
-    fetch(`http://localhost:3000/alljobs/${id}`)
+    fetch(`https://halalkaj-server.vercel.app/alljobs/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setJob(data);
@@ -38,7 +38,7 @@ const UpdateJob = () => {
       userEmail: user?.email,
     };
 
-    fetch(`http://localhost:3000/updateJob/${id}`, {
+    fetch(`https://halalkaj-server.vercel.app/updateJob/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

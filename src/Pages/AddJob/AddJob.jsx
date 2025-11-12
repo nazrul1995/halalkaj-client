@@ -16,7 +16,7 @@ const AddJob = () => {
             postedAt: new Date(),
             ...preview,
         };
-        fetch('http://localhost:3000/add-job/', {
+        fetch('https://halalkaj-server.vercel.app/add-job/', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
