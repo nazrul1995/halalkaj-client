@@ -13,7 +13,12 @@ const LatestJobs = () => {
 
   return (
     <div className='w-11/12 mx-auto py-10'>
-      <h3 className='text-3xl font-bold text-gray-800 mb-8 text-center'>Latest Jobs</h3>
+      <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+            Explore Our <span className="text-yellow-500">Latest job</span>
+          </h2>
+          <p className="mt-3 text-gray-600">Find the perfect job for you</p>
+        </div>
 
       <div className='grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2'>
         {jobs.map(job => <JobCard job={job} key={job._id} />)}

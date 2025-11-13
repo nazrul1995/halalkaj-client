@@ -85,11 +85,6 @@ const Login = () => {
     }
   };
 
-  const handleForgetPassword = (e) => {
-    e.preventDefault();
-    const email = e.target.form.email.value;
-    navigate('/forgot-password', { state: { email } });
-  };
 
   return (
       <div className='mt-32'>
@@ -121,13 +116,7 @@ const Login = () => {
             <span onClick={() => setShow(!show)} className="absolute right-2 top-3 cursor-pointer z-50" > {show ? <FaEye /> : <IoEyeOff />} </span>
           
           <p className="mt-2 text-sm text-red-600">
-              Forgot Password?{' '}
-              <button
-                className="btn btn-link p-0 text-red-600 font-semibold"
-                onClick={handleForgetPassword}
-              >
-                Reset Password
-              </button>
+              Forgot Password?
             </p>
           
           </div>
