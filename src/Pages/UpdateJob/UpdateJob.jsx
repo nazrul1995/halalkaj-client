@@ -12,7 +12,7 @@ const UpdateJob = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`https://halalkaj-server.vercel.app/alljobs/${id}`)
+    fetch(`https://halalkaj-server.vercel.app/allJobs/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setJob(data);

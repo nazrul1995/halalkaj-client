@@ -270,13 +270,7 @@ const MyPostedJobs = () => {
 
                   <div className="flex gap-3">
                     <Link
-                      to={`/job-proposals/${job._id}`}
-                      className="flex-1 btn btn-warning text-white rounded-full py-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all font-semibold"
-                    >
-                      View Proposals
-                    </Link>
-                    <Link
-                      to={`/edit-job/${job._id}`}
+                      to={`/update-job/${job._id}`}
                       className="flex-1 btn btn-ghost border-2 border-gray-300 rounded-full py-3 hover:bg-gray-50 transform hover:scale-105 transition-all font-semibold"
                     >
                       Edit
