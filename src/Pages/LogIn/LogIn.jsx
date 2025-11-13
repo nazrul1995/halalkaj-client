@@ -92,11 +92,14 @@ const Login = () => {
   };
 
   return (
-      <div className="bg-white bg-opacity-90 shadow-lg rounded-lg p-10 max-w-md w-full mx-4">
-        <h2 className="text-2xl font-semibold mb-6 text-gray-800 text-center">
-          Log in to Your Account
-        </h2>
-
+      <div className='mt-32'>
+        <div className="bg-white bg-opacity-90 shadow-lg rounded-lg w-11/12 mx-auto p-10 max-w-md">
+       <div className="text-center mb-10">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+          <span className="text-warning">Please</span> Log In your account
+          </h1>
+          <p className="mt-2 text-gray-600">Please Log in for Find job</p>
+        </div>
         <form onSubmit={handleLogIn} className="flex flex-col gap-5">
           <input
             type="email"
@@ -131,7 +134,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="btn btn-error w-full text-white font-semibold"
+            className="btn bg-green-800 w-full text-white font-semibold"
           >
             Log In
           </button>
@@ -153,6 +156,7 @@ const Login = () => {
             Register
           </Link>
         </p>
+      </div>
       </div>
   );
 };

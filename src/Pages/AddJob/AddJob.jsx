@@ -52,7 +52,7 @@ const AddJob = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("https://halalkaj-server.vercel.app/add-job", {
+      const res = await fetch("http://localhost:3000/add-job", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

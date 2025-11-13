@@ -102,8 +102,8 @@ const handleGoogleSignIn = () => {
 };
 
     return (
-        <div className='mt-20'>
-          <div className="bg-white bg-opacity-90 shadow-lg rounded-lg p-10 max-w-md w-full mx-4">
+        <div className='mt-32'>
+          <div className="bg-white bg-opacity-90 shadow-lg rounded-lg p-10 max-w-md w-11/12 mx-auto">
                 <h2 className="text-3xl font-semibold mb-2 text-gray-800 text-center">
                     Create an Account
                 </h2>
@@ -157,7 +157,7 @@ const handleGoogleSignIn = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="btn btn-error w-full text-white font-semibold"
+                        className="btn bg-green-800 w-full text-white font-semibold"
                     >
                         {loading ? 'Creating account...' : 'Create Account'}
                     </button>

@@ -15,7 +15,7 @@ const AcceptedTask = () => {
 
       try {
         const res = await fetch(
-          `https://halalkaj-server.vercel.app/my-accepted-tasks?email=${user.email}`,
+          `http://localhost:3000/my-accepted-tasks?email=${user.email}`,
           {
             headers: {
               authorization: `Bearer ${user.accessToken}`,
@@ -40,37 +40,41 @@ const AcceptedTask = () => {
   console.log(tasks);
 
   // Mark as Done (Complete)
-  const handleDone = async (taskId) => {
-    Swal.fire({
-      title: "Mark as Done?",
-      text: "This will complete the task and remove it from your list.",
-      icon: "success",
-      showCancelButton: true,
-      confirmButtonColor: "#facc15",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Done!",
-      cancelButtonText: "No, Keep It",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const res = await fetch(`https://halalkaj-server.vercel.app/task-action/${taskId}`, {
-            method: "DELETE",
-            headers: {
-              authorization: `Bearer ${user.accessToken}`,
-            },
-          });
+const handleDone = async (taskId) => {
+  Swal.fire({
+    title: "Mark as Done?",
+    text: "This will complete the task.",
+    icon: "success",
+    showCancelButton: true,
+    confirmButtonColor: "#facc15",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, Done!",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(`http://localhost:3000/task-action/${taskId}`, {
+          method: "DELETE",
+          headers: {
+            authorization: `Bearer ${user.accessToken}`,
+          },
+        });
 
-          if (res.ok) {
-            setTasks(tasks.filter((t) => t._id !== taskId));
-            Swal.fire("Done!", "Task completed successfully.", "success");
-          }
-        } catch (err) {
-          Swal.fire("Error", "Failed to complete task.", "error");
-          console.log(err)
+        if (res.ok) {
+          setTasks((prev) => prev.filter((t) => t._id !== taskId));
+          
+          Swal.fire("Done!", "Task completed.", "success");
+        } else {
+          const error = await res.json();
+          console.error("Delete failed:", error);
+          Swal.fire("Error", error.message || "Failed to complete task", "error");
         }
+      } catch (err) {
+        console.error("Network error:", err);
+        Swal.fire("Error", "Network error. Check console.", "error");
       }
-    });
-  };
+    }
+  });
+};
 
   // Cancel Task
   const handleCancel = async (taskId) => {
@@ -86,7 +90,7 @@ const AcceptedTask = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await fetch(`https://halalkaj-server.vercel.app/task-action/${taskId}`, {
+          const res = await fetch(`http://localhost:3000/task-action/${taskId}`, {
             method: "DELETE",
             headers: {
               authorization: `Bearer ${user.accessToken}`,
@@ -104,7 +108,7 @@ const AcceptedTask = () => {
       }
     });
   };
-
+console.log(tasks)
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -114,8 +118,9 @@ const AcceptedTask = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 mt-32">
+    <div className="mt-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
         {/* Header */}
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800">

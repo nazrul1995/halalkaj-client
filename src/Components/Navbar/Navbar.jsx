@@ -82,6 +82,16 @@ const Navbar = () => {
             isActive ? "font-bold text-yellow-400" : "text-white"
           }`
         }
+        to="/my-posted-jobs"
+      >
+        My Posted Jobs
+      </NavLink>
+      <NavLink
+        className={({ isActive }) =>
+          `block px-2 py-1 rounded hover:bg-white/20 transition ${
+            isActive ? "font-bold text-yellow-400" : "text-white"
+          }`
+        }
         to="/my-task"
       >
         My Tasks

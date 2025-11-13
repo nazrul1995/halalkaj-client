@@ -1,205 +1,330 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router';
+import { Link, useParams, useNavigate } from 'react-router';
 import { IoMdArrowBack } from 'react-icons/io';
-import { FaUser, FaCalendarAlt } from 'react-icons/fa';
+import { FaUser, FaCalendarAlt, FaMapMarkerAlt, FaClock, FaEdit, FaTrash, FaQuestionCircle, FaGlobe, FaDollarSign } from 'react-icons/fa';
 import { AuthContext } from '../../Components/Provider/AuthContext';
 import Swal from 'sweetalert2';
+import Breadcrumb from '../../Components/Breadcrumb';
 
 const JobDetails = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate()
+  const [isApplied, setIsApplied] = useState(false);
 
+  // Fetch Job Details
   useEffect(() => {
-
-    fetch(`https://halalkaj-server.vercel.app/allJobs/${id}`, {
-      headers: {
-        authorization: `Bearer ${user.accessToken}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
+    fetch(`https://halalkaj-server.vercel.app/allJobs/${id}`)
+      .then(res => res.json())
+      .then(data => {
         setJob(data);
         setLoading(false);
+
+        // Check if already applied
+        if (user?.email) {
+          fetch(`https://halalkaj-server.vercel.app/my-accepted-tasks?email=${user.email}`, {
+            headers: { authorization: `Bearer ${user.accessToken}` }
+          })
+            .then(res => res.json())
+            .then(tasks => {
+              setIsApplied(tasks.some(t => t._id === data._id));
+            });
+        }
       })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, [id, user]);
 
-  const handleDelete = () => {
+  // Handle Apply
+  const handleApply = () => {
+    if (job.userEmail === user.email) {
+      return Swal.fire("Warning", "You cannot apply to your own job.", "warning");
+    }
+
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
+      title: "Send Proposal?",
+      text: "You are about to apply for this job.",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
+      confirmButtonText: "Yes, Apply!",
+    }).then(result => {
       if (result.isConfirmed) {
-        fetch(`https://halalkaj-server.vercel.app/deleteJob/${id}`, {
-          method: "DELETE",
+        fetch("https://halalkaj-server.vercel.app/accepted-task-collection", {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             authorization: `Bearer ${user.accessToken}`
           },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            navigate("/");
-
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success",
-            });
+          body: JSON.stringify({
+            ...job,
+            accepted_by: user.email,
+            accepted_at: new Date()
           })
-          .catch((err) => {
-            console.log(err);
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.insertedId) {
+              setIsApplied(true);
+              Swal.fire("Applied!", "Your proposal has been sent.", "success");
+            }
+          })
+          .catch(() => Swal.fire("Error", "Failed to apply.", "error"));
+      }
+    });
+  };
+
+  // Handle Delete
+  const handleDelete = () => {
+    Swal.fire({
+      title: "Delete Job?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      confirmButtonText: "Yes, Delete!"
+    }).then(result => {
+      if (result.isConfirmed) {
+        fetch(`https://halalkaj-server.vercel.app/deleteJob/${id}`, {
+          method: "DELETE",
+          headers: { authorization: `Bearer ${user.accessToken}` }
+        })
+          .then(() => {
+            navigate("/");
+            Swal.fire("Deleted!", "Job has been removed.", "success");
           });
       }
     });
   };
-  const handleAcceptedTask = () => {
-  
-
-    fetch(`https://halalkaj-server.vercel.app/accepted-task-collections`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${user.accessToken}`,
-      },
-      body: JSON.stringify({...job, accepted_by: user.email}),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        Swal.fire({
-          icon: "success",
-          title: "Successfully accepted this task!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        console.log(data)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-600 text-lg">
-        Loading job details...
+      <div className="flex items-center justify-center min-h-screen">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
       </div>
     );
   }
 
   if (!job) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-red-600 text-lg">
-        Job not found!
+      <div className="flex items-center justify-center min-h-screen text-error">
+        <p className="text-xl font-semibold">Job not found!</p>
       </div>
     );
   }
 
+  const {
+    title, category, summary, postedBy, postedAt, coverImage,
+    location = 'Remote', budget = 'Not specified', level = 'Intermediate',
+    userEmail, skills = [], duration = '1-3 months'
+  } = job;
 
-  const { title, category, summary, postedBy, postedAt, coverImage } = job;
   const formattedDate = new Date(postedAt).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
+    day: 'numeric', month: 'short', year: 'numeric'
   });
 
-
+  const isOwnJob = user?.email === userEmail;
 
   return (
-    <div className="w-11/12 mx-auto py-10">
-      {/* Back button */}
-      <Link
-        to="/"
-        className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium mb-6"
-      >
-        <IoMdArrowBack /> Back to Jobs
-      </Link>
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Left side (Main content) */}
-        <div className="lg:col-span-2 bg-white shadow-md rounded-xl p-6">
-          <img
-            src={coverImage || 'https://via.placeholder.com/800x400?text=Job+Image'}
-            alt={title}
-            className="rounded-xl mb-6 w-full h-64 object-cover"
-          />
+    <section className="mt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          <h1 className="text-3xl font-bold text-gray-800 mb-3">{title}</h1>
-          <p className="text-sm text-blue-500 font-medium mb-2">{category}</p>
+        {/* Breadcrumb */}
+        <Breadcrumb
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Jobs', href: '/all-jobs' },
+            { label: title } // current page (no href)
+          ]}
+        />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          <div className="flex items-center gap-4 text-gray-500 text-sm mb-4">
-            <div className="flex items-center gap-1">
-              <FaUser className="text-orange-500" />
-              <span>{postedBy}</span>
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+
+            {/* Job Card */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+              {/* Header */}
+              <div className="flex justify-between items-start mb-5">
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{title}</h1>
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                    <span className="flex items-center gap-1">
+                      <FaMapMarkerAlt className="text-blue-600" /> {location}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <FaClock className="text-green-600" /> {duration}
+                    </span>
+                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                      {level}
+                    </span>
+                    <span className="font-semibold text-gray-900">${budget}</span>
+                  </div>
+                </div>
+                <Link to="/all-jobs" className="btn btn-ghost btn-circle">
+                  <IoMdArrowBack className="text-xl" />
+                </Link>
+              </div>
+
+              {/* Cover Image */}
+              {coverImage && (
+                <div className="mb-6 -mx-6">
+                  <img src={coverImage} alt={title} className="w-full h-64 object-cover rounded-t-xl" />
+                </div>
+              )}
+
+              {/* Description */}
+              <div className="prose prose-sm max-w-none mb-6">
+                <h3 className="text-lg font-semibold mb-3">Description</h3>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{summary}</p>
+              </div>
+
+              {/* Skills */}
+              {skills.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-3">Skills & Expertises</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {skills.map((skill, i) => (
+                      <span key={i} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Action Buttons – তোমার কার্ডের মতো স্টাইল */}
+              <div className="flex gap-2 pt-4 border-t">
+                {/* Send Proposal / Applied */}
+                {!isOwnJob && (
+                  <button
+                    onClick={handleApply}
+                    disabled={isApplied}
+                    className={`btn btn-sm rounded-full px-4 font-semibold transition-all
+        ${isApplied
+                        ? 'btn-success text-white hover:bg-green-600'
+                        : 'btn-warning text-white hover:bg-yellow-600'
+                      }`}
+                  >
+                    {isApplied ? 'Proposal Sent' : 'Send Proposal'}
+                  </button>
+                )}
+
+                {/* Update Job – Outline Primary */}
+                {isOwnJob && (
+                  <Link to={`/update-job/${id}`}
+                    className="btn btn-outline btn-sm rounded-full px-4 border-primary text-primary hover:bg-primary hover:text-white"
+                  >
+                    <FaEdit className="mr-1 text-sm" /> Update
+                  </Link>
+                )}
+
+                {/* Delete Job – Outline Error */}
+                {isOwnJob && (
+                  <button
+                    onClick={handleDelete}
+                    className="btn btn-outline btn-sm rounded-full px-4 border-error text-error hover:bg-error hover:text-white"
+                  >
+                    <FaTrash className="mr-1 text-sm" /> Delete
+                  </button>
+                )}
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <FaCalendarAlt className="text-blue-500" />
-              <span>{formattedDate}</span>
+
+            {/* Job Q&A */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <FaQuestionCircle className="text-blue-600" /> Job Q&A
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">Become a member to ask a question and get more benefits.</p>
+
+              <div className="space-y-3">
+                <details className="collapse collapse-arrow bg-gray-50 rounded-lg">
+                  <summary className="collapse-title text-sm font-medium">Can I post my job for free?</summary>
+                  <div className="collapse-content text-sm text-gray-600">
+                    <p>Condimentum id venenatis a condimentum vitae. Faucibus a pellentesque sit amet. Adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Ut tellus elementum sagittis vitae et leo duis ut diam.</p>
+                  </div>
+                </details>
+
+                <details className="collapse collapse-arrow bg-gray-50 rounded-lg">
+                  <summary className="collapse-title text-sm font-medium">How many jobs can I post for free?</summary>
+                  <div className="collapse-content text-sm text-gray-600">
+                    <p>Condimentum id venenatis a condimentum vitae. Faucibus a pellentesque sit amet. Adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus. Ut tellus elementum sagittis vitae et leo duis ut diam.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+
+            {/* Proposals */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold mb-4">Project Proposals (0)</h3>
+              <p className="text-sm text-gray-500">No proposals yet. Be the first to apply!</p>
             </div>
           </div>
 
-          <p className="text-gray-700 leading-relaxed mb-5">{summary}</p>
+          {/* Sidebar */}
+          <div className="space-y-6">
 
-          <div className='flex space-x-2.5'>
-            <button onClick={handleAcceptedTask} className="bg-linear-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 rounded-md hover:scale-105 transition duration-300">
-              Apply Now
-            </button>
-            {
-              user && user.email === job.userEmail && <div>
-              <Link to={`/update-job/${id}`} className="bg-linear-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 rounded-md hover:scale-105 transition duration-300">
-                Update Job
-              </Link>
-              <button onClick={handleDelete} className="bg-linear-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 rounded-md hover:scale-105 transition duration-300">
-                Delete Job
-              </button>
+            {/* Job Info Card */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold mb-4">Job Information</h3>
+              <ul className="space-y-3 text-sm">
+                <li className="flex justify-between">
+                  <span className="text-gray-600">Posted</span>
+                  <span className="font-medium">{formattedDate}</span>
+                </li>
+                <li className="flex justify-between">
+                  <span className="text-gray-600 flex items-center gap-1"><FaGlobe className="text-gray-400" /> Location</span>
+                  <span className="font-medium">{location}</span>
+                </li>
+                <li className="flex justify-between">
+                  <span className="text-gray-600 flex items-center gap-1"><FaDollarSign className="text-gray-400" /> Budget</span>
+                  <span className="font-medium">${budget}</span>
+                </li>
+                <li className="flex justify-between">
+                  <span className="text-gray-600 flex items-center gap-1"><FaClock className="text-gray-400" /> Duration</span>
+                  <span className="font-medium">{duration}</span>
+                </li>
+                <li className="flex justify-between">
+                  <span className="text-gray-600">Category</span>
+                  <span className="font-medium">{category}</span>
+                </li>
+              </ul>
             </div>
-            }
-          </div>
-        </div>
 
-        {/* Right side (Sidebar) */}
-        <div className="bg-gray-50 shadow-md rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">About the Employer</h2>
-          <div className="flex items-center gap-4 mb-4">
-            <img
-              src="https://i.ibb.co/6DYM05G/default-avatar.png"
-              alt={postedBy}
-              className="w-12 h-12 rounded-full border border-gray-300"
-            />
-            <div>
-              <h3 className="font-semibold">{postedBy}</h3>
-              <p className="text-sm text-gray-500">Verified Employer</p>
+            {/* Employer Card */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold mb-4">About the Client</h3>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="avatar">
+                  <div className="w-16 h-16 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                    <img src="https://i.ibb.co/6DYM05G/default-avatar.png" alt={postedBy} />
+                  </div>
+                </div>
+                <div>
+                  <p className="font-bold text-gray-900">{postedBy}</p>
+                  <p className="text-xs text-success">Canada</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3 text-center">
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-2xl font-bold text-primary">0</p>
+                  <p className="text-xs text-gray-600">Expert Proposals</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-2xl font-bold text-gray-900">2 years ago</p>
+                  <p className="text-xs text-gray-600">Member Since</p>
+                </div>
+              </div>
             </div>
           </div>
-
-          <hr className="my-4" />
-
-          <h2 className="text-lg font-semibold text-gray-700 mb-2">Job Info</h2>
-          <ul className="text-sm text-gray-600 space-y-1">
-            <li>
-              <strong>Category:</strong> {category}
-            </li>
-            <li>
-              <strong>Posted:</strong> {formattedDate}
-            </li>
-          </ul>
         </div>
       </div>
-    </div>
+
+    </section>
   );
 };
 
