@@ -6,27 +6,9 @@ import { Link } from "react-router";
 const JobCard = ({ job }) => {
   const { user } = useContext(AuthContext);
   const [applied, setApplied] = useState(false);
-
-  const {
-    title,
-    description,
-    price,
-    jobType,
-    postedBy,
-    skills = [],
-    postedAt,
-    coverImage,
-    userEmail, // Job পোস্ট করার ইউজারের ইমেইল
-  } = job;
-
-  const formattedDate = new Date(postedAt).toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-
+  const {userEmail} = job;
   const handleAcceptedTask = async () => {
-    if (applied) return; // Prevent double click
+    if (applied) return;
 
     // Prevent user from applying to own job
     if (userEmail === user.email) {
@@ -43,10 +25,11 @@ const JobCard = ({ job }) => {
         jobId: job._id,
         title: job.title,
         category: job.category,
-        summary: job.summary,
+        postedBy: job.postedBy,
         coverImage: job.coverImage,
         created_at: new Date(),
         accepted_by: user.email,
+        accepted_date: new Date()
       };
 
       const res = await fetch(`https://halalkaj-server.vercel.app/accepted-task-collection`, {
@@ -81,81 +64,76 @@ const JobCard = ({ job }) => {
     }
   };
 
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+    if (diffInDays === 0) return "Today";
+    if (diffInDays === 1) return "Yesterday";
+    if (diffInDays < 30) return `${diffInDays} days ago`;
+    if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`;
+    return `${Math.floor(diffInDays / 365)} years ago`;
+  };
+
+
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 flex flex-col overflow-hidden group">
-      {/* Cover Image */}
-      <div className="relative w-full h-44 overflow-hidden">
-        <img
-          src={coverImage || "https://via.placeholder.com/400x250?text=Job+Cover"}
-          alt={title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
-        />
-        <span className="absolute top-3 left-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-          {jobType || "Remote"}
-        </span>
+    <div className="card bg-white shadow-md border border-gray-200 rounded-xl p-5 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-3">
+        <div className="flex-1">
+          <h2 className="text-lg font-bold text-gray-800 line-clamp-2">
+            {job.title}
+          </h2>
+          <div className="flex gap-2 mt-2">
+            <span className="badge badge-outline badge-sm">Fixed</span>
+            <span className="badge badge-primary badge-sm">{job.category}</span>
+          </div>
+        </div>
+        <button className="btn btn-ghost btn-circle text-gray-500 hover:text-primary">
+          <i className="fa-regular fa-bookmark text-lg"></i>
+        </button>
       </div>
 
-      {/* Content */}
-      <div className="p-6 flex flex-col flex-grow">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-3">
-          <div>
-            <h3 className="text-gray-800 font-semibold">{postedBy || "John Doe"}</h3>
-            <p className="text-xs text-gray-400">{formattedDate}</p>
-          </div>
+      {/* Meta */}
+      <div className="text-xs text-gray-500 flex flex-wrap items-center gap-2 mb-3">
+        <span>Posted {formatDate(job.postedAt)}</span>
+        <span>•</span>
+        <span>0 Proposals</span>
+        <span>•</span>
+        <span className="text-primary font-medium">Basic Level</span>
+      </div>
 
-          <div className="text-right">
-            <p className="text-xl font-bold text-indigo-600">{price ? `$${price}` : "N/A"}</p>
+      {/* Summary */}
+      <p className="text-sm text-gray-600 line-clamp-3 mb-4">{job.summary}</p>
+
+      {/* Price */}
+      <div className="mb-4">
+        <span className="text-xl font-bold text-success">${job.price ? job.price:"Not Fixed"}</span>
+      </div>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <div className="min-w-0">
+            <h4 className="font-semibold text-sm text-gray-800 truncate">{job.postedBy}</h4>
+            <p className="text-xs text-gray-500 flex items-center">
+              <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+              </svg>
+              Remote
+            </p>
           </div>
         </div>
 
-        {/* Title */}
-        <h2 className="text-lg font-semibold text-gray-900 mb-2 hover:text-indigo-600 transition-colors duration-300">
-          {title}
-        </h2>
-
-        {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {description || "Exciting opportunity for skilled professionals to join a dynamic team."}
-        </p>
-
-        {/* Skills */}
-        <div className="flex flex-wrap gap-2 mb-5">
-          {skills.slice(0, 3).map((skill, i) => (
-            <span
-              key={i}
-              className="bg-indigo-50 text-indigo-700 text-xs font-medium px-3 py-1 rounded-full border border-indigo-100"
-            >
-              {skill}
-            </span>
-          ))}
-          {skills.length > 3 && (
-            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs px-3 py-1 rounded-full">
-              +{skills.length - 3}
-            </span>
-          )}
-        </div>
-
-        {/* Buttons */}
-        <div className="grid grid-cols-2 gap-3 mt-auto">
-          <button
-            onClick={handleAcceptedTask}
-            disabled={applied}
-            className={`bg-gradient-to-r from-green-400 to-emerald-500 text-white font-semibold py-2 rounded-md hover:shadow-md hover:scale-105 transition-transform duration-300 ${
-              applied ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            {applied ? "Applied" : "APPLY NOW"}
-          </button>
-
-          <Link
-            to={`/all-jobs/${job._id}`}
-            rel="noopener noreferrer"
-            className="text-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-2 rounded-md hover:shadow-md hover:scale-105 transition-transform duration-300"
-          >
-            VIEW JOB
+        {/* Buttons: View Job (Outline) + Apply Job (Yellow) */}
+        <div className="flex gap-2">
+          <Link to={`/all-jobs/${job._id}`}>
+            <button className="btn btn-outline btn-sm rounded-full px-4 border-primary text-primary hover:bg-primary hover:text-white">
+              View Job
+            </button>
           </Link>
-        </div>
+          <button onClick={handleAcceptedTask} className="btn btn-warning btn-sm rounded-full px-4 text-white font-semibold hover:bg-yellow-600">Apply Job</button>        </div>
       </div>
     </div>
   );

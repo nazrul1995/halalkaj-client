@@ -145,7 +145,7 @@ const Navbar = () => {
             <>
               <Link
                 to="/login"
-                className="btn btn-sm bg-gradient-to-r from-yellow-400 to-green-400 text-white rounded-full flex items-center gap-1 transition-colors duration-500"
+                className="btn btn-sm  from-yellow-400 to-green-400 text-white rounded-full flex items-center gap-1 transition-colors duration-500"
               >
                 <IoLogIn /> Login
               </Link>
