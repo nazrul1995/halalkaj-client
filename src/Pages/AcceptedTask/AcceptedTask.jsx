@@ -15,7 +15,7 @@ const AcceptedTask = () => {
 
       try {
         const res = await fetch(
-          `https://halalkaj-server-mtjhf6suj-nazrul1995s-projects.vercel.appmy-accepted-tasks?email=${user.email}`,
+          `https://halalkaj-server.vercel.app/my-accepted-tasks?email=${user.email}`,
           {
             headers: {
               authorization: `Bearer ${user.accessToken}`,
@@ -52,7 +52,7 @@ const handleDone = async (taskId) => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`https://halalkaj-server-mtjhf6suj-nazrul1995s-projects.vercel.apptask-action/${taskId}`, {
+        const res = await fetch(`https://halalkaj-server.vercel.app/task-action/${taskId}`, {
           method: "DELETE",
           headers: {
             authorization: `Bearer ${user.accessToken}`,
@@ -90,7 +90,7 @@ const handleDone = async (taskId) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await fetch(`https://halalkaj-server-mtjhf6suj-nazrul1995s-projects.vercel.apptask-action/${taskId}`, {
+          const res = await fetch(`https://halalkaj-server.vercel.app/task-action/${taskId}`, {
             method: "DELETE",
             headers: {
               authorization: `Bearer ${user.accessToken}`,

@@ -27,7 +27,7 @@ const router = createBrowserRouter([
             {
                 path: '/all-jobs',
                 Component: AllJobs,
-                loader: () => fetch('https://halalkaj-server-mtjhf6suj-nazrul1995s-projects.vercel.appallJobs')
+                //loader: () => fetch('https://halalkaj-server-6nkxa0v9d-nazrul1995s-projects.vercel.app/allJobs')
             },
             {
                 path: '/all-jobs/:id',

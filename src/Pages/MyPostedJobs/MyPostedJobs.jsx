@@ -15,7 +15,7 @@ const MyPostedJobs = () => {
 
       try {
         const res = await fetch(
-          `https://halalkaj-server-mtjhf6suj-nazrul1995s-projects.vercel.appmy-posted-jobs?email=${user.email}`,
+          `https://halalkaj-server.vercel.app/my-posted-jobs?email=${user.email}`,
           {
             headers: { authorization: `Bearer ${user.accessToken}` },
           }
@@ -47,7 +47,7 @@ const MyPostedJobs = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await fetch(`https://halalkaj-server-mtjhf6suj-nazrul1995s-projects.vercel.appdeleteJob/${jobId}`, {
+          const res = await fetch(`https://halalkaj-server.vercel.app/deleteJob/${jobId}`, {
             method: "DELETE",
             headers: { authorization: `Bearer ${user.accessToken}` },
           });
