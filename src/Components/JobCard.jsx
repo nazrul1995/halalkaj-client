@@ -6,46 +6,61 @@ import { Link } from "react-router";
 const JobCard = ({ job }) => {
   const { user } = useContext(AuthContext);
   const [applied, setApplied] = useState(false);
-  const {userEmail} = job;
+
+  const {
+    _id,
+    title,
+    category,
+    postedBy,
+    summary,
+    price,
+    postedAt,
+    level,
+    userEmail,
+  } = job;
+
   const handleAcceptedTask = async () => {
+    if (!user) {
+      return Swal.fire({
+        icon: "warning",
+        title: "Login required",
+        text: "Please login to apply for jobs",
+      });
+    }
+
     if (applied) return;
 
-    // Prevent user from applying to own job
     if (userEmail === user.email) {
-      Swal.fire({
+      return Swal.fire({
         icon: "error",
         title: "Oops!",
         text: "You cannot apply to your own job!",
       });
-      return;
     }
 
     try {
       const addedTask = {
-        jobId: job._id,
-        title: job.title,
-        category: job.category,
-        postedBy: job.postedBy,
-        coverImage: job.coverImage,
-        created_at: new Date(),
+        jobId: _id,
+        title,
+        category,
+        postedBy,
         accepted_by: user.email,
-        accepted_date: new Date()
+        accepted_date: new Date(),
       };
 
-      const res = await fetch(`https://halalkaj-server.vercel.app/accepted-task-collection`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${user.accessToken}`,
-        },
-        body: JSON.stringify(addedTask),
-      });
+      const res = await fetch(
+        `https://halalkaj-server.vercel.app/accepted-task-collection`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${user.accessToken}`,
+          },
+          body: JSON.stringify(addedTask),
+        }
+      );
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to apply");
-      }
+      if (!res.ok) throw new Error("Failed to apply");
 
       Swal.fire({
         icon: "success",
@@ -64,76 +79,78 @@ const JobCard = ({ job }) => {
     }
   };
 
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const now = new Date();
-    const diffInDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-    if (diffInDays === 0) return "Today";
-    if (diffInDays === 1) return "Yesterday";
-    if (diffInDays < 30) return `${diffInDays} days ago`;
-    if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`;
-    return `${Math.floor(diffInDays / 365)} years ago`;
+    const diff = Math.floor((Date.now() - date) / (1000 * 60 * 60 * 24));
+    if (diff === 0) return "Today";
+    if (diff === 1) return "Yesterday";
+    if (diff < 30) return `${diff} days ago`;
+    if (diff < 365) return `${Math.floor(diff / 30)} months ago`;
+    return `${Math.floor(diff / 365)} years ago`;
   };
 
-
   return (
-    <div className="card bg-white shadow-md border border-gray-200 rounded-xl p-5 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-md p-5 flex flex-col h-full hover:shadow-xl transition">
+
       {/* Header */}
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex-1">
-          <h2 className="text-lg font-bold text-gray-800 line-clamp-2">
-            {job.title}
-          </h2>
-          <div className="flex gap-2 mt-2">
-            <span className="badge badge-outline badge-sm">Fixed</span>
-            <span className="badge badge-primary badge-sm">{job.category}</span>
-          </div>
+      <div className="mb-3">
+        <h2 className="text-lg font-bold text-gray-800 dark:text-white line-clamp-2">
+          {title}
+        </h2>
+
+        <div className="flex items-center gap-2 mt-2 text-sm">
+          <span className="text-gray-500">Category:</span>
+          <span className="badge badge-primary badge-sm text-white">
+            {category}
+          </span>
         </div>
-        <button className="btn btn-ghost btn-circle text-gray-500 hover:text-primary">
-          <i className="fa-regular fa-bookmark text-lg"></i>
-        </button>
       </div>
 
       {/* Meta */}
-      <div className="text-xs text-gray-500 flex flex-wrap items-center gap-2 mb-3">
-        <span>Posted {formatDate(job.postedAt)}</span>
+      <div className="text-xs text-gray-500 dark:text-gray-400 flex flex-wrap gap-2 mb-3">
+        <span>Posted {formatDate(postedAt)}</span>
         <span>•</span>
-        <span>0 Proposals</span>
+        <span>{level || "Basic"} Level</span>
         <span>•</span>
-        <span className="text-primary font-medium">Basic Level</span>
       </div>
 
       {/* Summary */}
-      <p className="text-sm text-gray-600 line-clamp-3 mb-4">{job.summary}</p>
+      <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">
+        {summary}
+      </p>
 
       {/* Price */}
       <div className="mb-4">
-        <span className="text-xl font-bold text-success">${job.price ? job.price:"Not Fixed"}</span>
+        <span className="text-xl font-bold text-success">
+          {price ? `$${price}` : "Negotiable"}
+        </span>
       </div>
 
-      {/* Footer */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="min-w-0">
-            <h4 className="font-semibold text-sm text-gray-800 truncate">{job.postedBy}</h4>
-            <p className="text-xs text-gray-500 flex items-center">
-              <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-              </svg>
-              Remote
-            </p>
-          </div>
+      {/* Footer (Stick to bottom) */}
+      <div className="mt-auto flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h4 className="font-semibold text-sm text-gray-800 dark:text-white truncate">
+            {postedBy}
+          </h4>
         </div>
 
-        {/* Buttons: View Job (Outline) + Apply Job (Yellow) */}
         <div className="flex gap-2">
-          <Link to={`/all-jobs/${job._id}`}>
+          <Link to={`/all-jobs/${_id}`}>
             <button className="btn btn-outline btn-sm rounded-full px-4 border-primary text-primary hover:bg-primary hover:text-white">
-              View Job
+              View
             </button>
           </Link>
-          <button onClick={handleAcceptedTask} className="btn btn-warning btn-sm rounded-full px-4 text-white font-semibold hover:bg-yellow-600">Apply Job</button>        </div>
+
+          <button
+            onClick={handleAcceptedTask}
+            disabled={applied}
+            className={`btn btn-sm rounded-full px-4 font-semibold text-white
+              ${applied ? "bg-gray-400 cursor-not-allowed" : "btn-warning hover:bg-yellow-600"}
+            `}
+          >
+            {applied ? "Applied" : "Apply"}
+          </button>
+        </div>
       </div>
     </div>
   );

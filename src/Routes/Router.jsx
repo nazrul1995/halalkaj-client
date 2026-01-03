@@ -12,6 +12,9 @@ import AddJob from '../Pages/AddJob/AddJob';
 import UpdateJob from '../Pages/UpdateJob/UpdateJob';
 import MyPostedJobs from '../Pages/MyPostedJobs/MyPostedJobs';
 import AcceptedTask from '../Pages/AcceptedTask/AcceptedTask';
+import DashboardLayout from '../Layouts/DashboardLayouts';
+import Statistics from '../Pages/Dashboard/Common/Statistics';
+import Profile from '../Pages/Dashboard/Common/Profile';
 
 
 
@@ -27,7 +30,6 @@ const router = createBrowserRouter([
             {
                 path: '/all-jobs',
                 Component: AllJobs,
-                //loader: () => fetch('https://halalkaj-server-6nkxa0v9d-nazrul1995s-projects.vercel.app/allJobs')
             },
             {
                 path: '/all-jobs/:id',
@@ -44,28 +46,48 @@ const router = createBrowserRouter([
                 Component: Register
             },
            
-            {
-                path: '/add-job',
-                element:<PrivateRouter><AddJob></AddJob></PrivateRouter>
-            },
-            {
-                path: '/update-job/:id',
-                element:<PrivateRouter><UpdateJob></UpdateJob></PrivateRouter>
-            },
-            {
-                path: '/my-posted-jobs',
-                element:<PrivateRouter><MyPostedJobs></MyPostedJobs></PrivateRouter>
-            },
-            {
-                path: '/my-task',
-                element:<PrivateRouter><AcceptedTask></AcceptedTask></PrivateRouter>
-            },
+
             {
                 path: '/forgot-password',
                 Component: ForgetPassword
             }
         ]
     },
+     {
+                path: '/dashboard',
+                element: <PrivateRouter><DashboardLayout /></PrivateRouter>,
+                children: [
+                    {
+                        index: true,
+                        element: (
+                            <PrivateRouter>
+                                <Statistics />
+                            </PrivateRouter>
+                        ),
+                    },
+                    {
+                        path: 'add-job',
+                        element: <PrivateRouter><AddJob></AddJob></PrivateRouter>
+                    },
+                    {
+                        path: 'update-job/:id',
+                        element: <PrivateRouter><UpdateJob></UpdateJob></PrivateRouter>
+                    },
+                    {
+                        path: 'my-posted-jobs',
+                        element: <PrivateRouter><MyPostedJobs></MyPostedJobs></PrivateRouter>
+                    },
+                    {
+                        path: 'my-task',
+                        element: <PrivateRouter><AcceptedTask></AcceptedTask></PrivateRouter>
+                    },
+                    {
+                        path: 'profile',
+                        element: <PrivateRouter><Profile/></PrivateRouter>
+                    },
+                ]
+
+            },
 ]);
 
 export default router;

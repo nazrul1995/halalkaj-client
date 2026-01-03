@@ -37,7 +37,7 @@ const AcceptedTask = () => {
     fetchTasks();
   }, [user]);
 
-  console.log(tasks);
+  //console.log(tasks);
 
   // Mark as Done (Complete)
 const handleDone = async (taskId) => {
@@ -54,9 +54,6 @@ const handleDone = async (taskId) => {
       try {
         const res = await fetch(`https://halalkaj-server.vercel.app/task-action/${taskId}`, {
           method: "DELETE",
-          headers: {
-            authorization: `Bearer ${user.accessToken}`,
-          },
         });
 
         if (res.ok) {

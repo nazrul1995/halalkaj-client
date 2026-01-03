@@ -68,27 +68,27 @@ const MyPostedJobs = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100">
         <span className="loading loading-spinner loading-lg text-warning"></span>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 py-12 px-4">
       <div className="max-w-7xl mx-auto">
 
         {/* Header Section */}
         <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-10 border border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
-              <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-900 to-green-700">
+              <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-green-900 to-green-700">
                 My <span className="text-warning">Posted Jobs</span>
               </h1>
               <p className="text-gray-600 mt-2 text-lg">Manage, edit, or delete your active job posts</p>
             </div>
             <Link
-              to="/post-job"
+              to="/dashboard/add-job"
               className="btn bg-green-900 hover:bg-green-800 text-white rounded-full px-8 py-3 shadow-lg transform transition-all hover:scale-105 flex items-center gap-3 text-lg font-semibold"
             >
               <i className="fas fa-plus-circle text-xl"></i>
@@ -106,7 +106,7 @@ const MyPostedJobs = () => {
             <h3 className="text-2xl font-bold text-gray-700 mb-3">No Jobs Posted Yet</h3>
             <p className="text-gray-500 mb-8">Start hiring top talent today!</p>
             <Link
-              to="/post-job"
+              to="/dashboard/add-job"
               className="btn bg-green-900 hover:bg-green-800 text-white rounded-full px-10 py-3 shadow-lg transform transition-all hover:scale-105"
             >
               Post Your First Job
@@ -116,7 +116,7 @@ const MyPostedJobs = () => {
           <>
             {/* Desktop Table - Premium Design */}
             <div className="hidden lg:block bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
-              <div className="bg-gradient-to-r from-green-900 to-green-800 text-white p-5">
+              <div className="bg-linear-to-r from-green-900 to-green-800 text-white p-5">
                 <h2 className="text-xl font-bold">Active Job Listings</h2>
               </div>
               <table className="table w-full">
@@ -134,7 +134,7 @@ const MyPostedJobs = () => {
                   {jobs.map((job) => (
                     <tr
                       key={job._id}
-                      className="hover:bg-gradient-to-r hover:from-yellow-50 hover:to-white transition-all duration-300"
+                      className="hover:bg-linear-to-r hover:from-yellow-50 hover:to-white transition-all duration-300"
                     >
                       <td className="py-6 px-6">
                         <div className="flex items-center gap-5">
@@ -190,7 +190,7 @@ const MyPostedJobs = () => {
                     
                           {/* Edit - White */}
                           <Link
-                            to={`/update-job/${job._id}`}
+                            to={`/dashboard/update-job/${job._id}`}
                             className="btn btn-ghost border-2 border-gray-300 rounded-full px-5 py-2 hover:bg-gray-50 hover:border-gray-400 transform hover:scale-105 transition-all flex items-center gap-2 font-semibold"
                           >
                             <i className="fas fa-edit"></i> Edit

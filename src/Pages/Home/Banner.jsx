@@ -103,13 +103,13 @@ const Banner = () => {
           <span ref={titleRef}>{chars}</span>
           <br />
           <span ref={highlightRef} className="text-yellow-400">
-            FreeAgent
+            HalalKaj
           </span>
         </h1>
 
         {/* Subtitle */}
         <p ref={subtitleRef} className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl">
-          Thousands of Small businesses & Entrepreneurs use FreeAgent to get their Job done
+          Thousands of Small businesses & Entrepreneurs use HalalKaj to get their Job done
         </p>
 
         {/* Search Bar */}
