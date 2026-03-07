@@ -11,16 +11,11 @@ const AcceptedTask = () => {
   // Fetch accepted tasks
   useEffect(() => {
     const fetchTasks = async () => {
-      if (!user?.accessToken) return;
+      //if (!user?.accessToken) return;
 
       try {
         const res = await fetch(
-          `https://halalkaj-server.vercel.app/my-accepted-tasks?email=${user.email}`,
-          {
-            headers: {
-              authorization: `Bearer ${user.accessToken}`,
-            },
-          }
+          `https://halalkaj-server.vercel.app/my-accepted-tasks?email=${user.email}`
         );
 
         if (!res.ok) throw new Error("Failed to load tasks");
@@ -131,7 +126,7 @@ console.log(tasks)
           <div className="text-center py-20 bg-white rounded-xl shadow-lg">
             <i className="fas fa-tasks text-6xl text-gray-300 mb-4"></i>
             <p className="text-xl text-gray-500 mb-6">No accepted tasks yet.</p>
-            <a href="/jobs" className="btn btn-warning rounded-full px-8">
+            <a href="/all-jobs" className="btn btn-warning rounded-full px-8">
               Browse Jobs
             </a>
           </div>

@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FaUserCog } from 'react-icons/fa';
 import MenuItem from './MenuItem';
+import { AuthContext } from '../../../Provider/AuthContext';
 
 const SellerMenu = () => {
+  const {user} = useContext(AuthContext)
     return (
        <>
-      <MenuItem icon={FaUserCog} label='My Accepted Tasks' address='my-task' />
+       {
+        user.email === 'seller@gmail.com' && <MenuItem icon={FaUserCog} label='My Accepted Tasks' address='my-task' />
+       }
+      
     </>
     );
 };

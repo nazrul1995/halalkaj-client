@@ -4,15 +4,17 @@ import LatestJobs from './LatestJobs';
 import PopularCategory from './PopularCategory';
 import TestimonialSection from './Testimonial';
 import HowItWorks from './HowItWorks';
-import FeaturedCompanies from './FeaturedCompanies';
 import WhyChooseUs from './WhyChooseUs';
-import CareerBlogs from './CareerBlogs';
-import NewsLetter from './NewsLetter';
-import CallToAction from './CallToAction';
+
+import TopRatedFreelancers from './TopRatedFreelancers';
+import AppSection from './AppSection';
+import Statistics from './Statistics';
+import FAQ from './FAQ';
+import ContactUs from './ContactUs';
 
 const Home = () => {
     return (
-        <div>
+        <div className="min-h-screen bg-gray-50">
 
             <Banner />
 
@@ -21,17 +23,19 @@ const Home = () => {
             <LatestJobs />
 
             <HowItWorks />
-
-            <FeaturedCompanies />
             <WhyChooseUs />
 
             <TestimonialSection />
 
-            <CareerBlogs />
+            <TopRatedFreelancers />
 
-            <NewsLetter />
+            <AppSection />
 
-            <CallToAction />
+            <Statistics />
+
+            <FAQ />
+
+            <ContactUs />
 
         </div>
     );

@@ -15,6 +15,7 @@ import AcceptedTask from '../Pages/AcceptedTask/AcceptedTask';
 import DashboardLayout from '../Layouts/DashboardLayouts';
 import Statistics from '../Pages/Dashboard/Common/Statistics';
 import Profile from '../Pages/Dashboard/Common/Profile';
+import ManageRole from '../Pages/Dashboard/ManageRole';
 
 
 
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
                     {
                         path: 'profile',
                         element: <PrivateRouter><Profile/></PrivateRouter>
+                    },
+                    {
+                        path: 'manage-role',
+                        element: <PrivateRouter><ManageRole/></PrivateRouter>
                     },
                 ]
 

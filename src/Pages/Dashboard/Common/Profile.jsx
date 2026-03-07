@@ -1,121 +1,107 @@
-import { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../Components/Provider/AuthContext";
+import RoleApplicationForm from "./RoleApplicationForm";
 
 const Profile = () => {
   const { user } = useContext(AuthContext);
+  const [openRole, setOpenRole] = useState(null);
+
 
   if (!user) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <span className="loading loading-spinner loading-lg"></span>
+        <span className="loading loading-spinner loading-lg text-warning"></span>
       </div>
     );
   }
 
-  const role = user.role || "buyer";
-
   return (
-    <div className="w-11/12 max-w-6xl mx-auto mt-28">
-      {/* Header */}
-      <div className="bg-white shadow rounded-xl p-6 flex flex-col md:flex-row items-center gap-6">
+    <div className="w-11/12 max-w-6xl mx-auto mt-28 space-y-12">
+      {/* ================= Profile Header ================= */}
+      <div className="relative bg-white rounded-2xl shadow-lg p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 overflow-hidden">
+        {/* Accent */}
+        <div className="absolute inset-x-0 top-0 h-1 bg-warning" />
+
         <img
           src={user.photoURL || "https://i.ibb.co/2kRZ0dF/user.png"}
           alt="profile"
-          className="w-28 h-28 rounded-full object-cover border"
+          className="w-28 h-28 rounded-full border-4 border-warning object-cover shadow-md"
         />
 
         <div className="flex-1 text-center md:text-left">
-          <h2 className="text-2xl font-bold text-gray-800">{user.name}</h2>
-          <p className="text-gray-500">{user.email}</p>
+          <h2 className="text-2xl font-bold text-gray-800">
+            {user.displayName || "User"}
+          </h2>
+          <p className="text-gray-500 mt-1">{user.email}</p>
 
-          <span className={`inline-block mt-2 px-4 py-1 rounded-full text-sm font-semibold
-            ${role === "admin" && "bg-red-100 text-red-600"}
-            ${role === "seller" && "bg-green-100 text-green-600"}
-            ${role === "buyer" && "bg-blue-100 text-blue-600"}
-          `}>
-            {role.toUpperCase()}
+          <span className="inline-block mt-4 px-5 py-1.5 rounded-full bg-warning/10 text-warning text-sm font-semibold">
+            Profile Overview
           </span>
         </div>
-
-        <button className="btn btn-outline btn-sm">
-          Edit Profile
-        </button>
       </div>
 
-      {/* Role Based Sections */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+      {/* ================= Apply Cards ================= */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Seller Card */}
+        <div className="group bg-white rounded-2xl shadow hover:shadow-xl transition p-6 flex flex-col justify-between border border-gray-100">
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-warning transition">
+              Become a Seller
+            </h3>
+            <p className="text-gray-600 text-sm mb-4">
+              Start earning by accepting tasks and delivering quality work.
+            </p>
 
-        {/* Buyer */}
-        {role === "buyer" && (
-          <>
-            <StatCard title="Applied Jobs" value="12" />
-            <StatCard title="Ongoing Jobs" value="4" />
-            <StatCard title="Completed Jobs" value="8" />
+            <ul className="text-sm text-gray-500 list-disc list-inside space-y-1">
+              <li>Accept tasks</li>
+              <li>Work remotely</li>
+              <li>Secure payments</li>
+            </ul>
+          </div>
 
-            <ActionCard
-              title="My Applications"
-              desc="View all jobs you have applied for"
-              btnText="View Applications"
-            />
-          </>
-        )}
+          <button
+            onClick={() => setOpenRole("seller")}
+            className="btn btn-warning mt-6 rounded-full w-full"
+          >
+            Apply as Seller
+          </button>
+        </div>
 
-        {/* Seller */}
-        {role === "seller" && (
-          <>
-            <StatCard title="Posted Jobs" value="15" />
-            <StatCard title="Active Jobs" value="6" />
-            <StatCard title="Completed Jobs" value="9" />
+        {/* Buyer Card */}
+        <div className="group bg-white rounded-2xl shadow hover:shadow-xl transition p-6 flex flex-col justify-between border border-gray-100">
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-warning transition">
+              Become a Buyer
+            </h3>
+            <p className="text-gray-600 text-sm mb-4">
+              Post jobs, hire skilled sellers, and manage projects easily.
+            </p>
 
-            <ActionCard
-              title="Manage Jobs"
-              desc="View and manage your posted jobs"
-              btnText="Manage Jobs"
-            />
-          </>
-        )}
+            <ul className="text-sm text-gray-500 list-disc list-inside space-y-1">
+              <li>Post jobs</li>
+              <li>Hire talent</li>
+              <li>Manage work</li>
+            </ul>
+          </div>
 
-        {/* Admin */}
-        {role === "admin" && (
-          <>
-            <StatCard title="Total Users" value="320" />
-            <StatCard title="Total Jobs" value="145" />
-            <StatCard title="Pending Reports" value="3" />
-
-            <ActionCard
-              title="Admin Panel"
-              desc="Manage users, jobs & reports"
-              btnText="Go to Dashboard"
-              danger
-            />
-          </>
-        )}
+          <button
+            onClick={() => setOpenRole("buyer")}
+            className="btn btn-warning mt-6 rounded-full w-full"
+          >
+            Apply as Buyer
+          </button>
+        </div>
       </div>
-    </div>
-  );
-};
 
-/* ---------------- Reusable Components ---------------- */
-
-const StatCard = ({ title, value }) => {
-  return (
-    <div className="bg-white rounded-xl shadow p-6 text-center">
-      <h3 className="text-gray-500 text-sm mb-1">{title}</h3>
-      <p className="text-3xl font-bold text-primary">{value}</p>
-    </div>
-  );
-};
-
-const ActionCard = ({ title, desc, btnText, danger }) => {
-  return (
-    <div className="bg-white rounded-xl shadow p-6 md:col-span-3 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div>
-        <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
-        <p className="text-gray-500 text-sm">{desc}</p>
-      </div>
-      <button className={`btn ${danger ? "btn-error" : "btn-primary"} btn-sm`}>
-        {btnText}
-      </button>
+      {/* ================= Modal ================= */}
+      {openRole && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+          <RoleApplicationForm
+            role={openRole}
+            close={() => setOpenRole(null)}
+          />
+        </div>
+      )}
     </div>
   );
 };

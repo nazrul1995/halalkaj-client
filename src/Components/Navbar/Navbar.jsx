@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from "react-router";
 import { AuthContext } from "../Provider/AuthContext";
 import { IoLogIn, IoLogOut } from "react-icons/io5";
 import Swal from "sweetalert2";
+import { MdSpaceDashboard } from "react-icons/md";
 
 const Navbar = () => {
   const { user, LogOutUser } = useContext(AuthContext);
@@ -48,8 +49,7 @@ const Navbar = () => {
     <>
       <NavLink
         className={({ isActive }) =>
-          `block px-2 py-1 rounded hover:bg-white/20 transition ${
-            isActive ? "font-bold text-yellow-400" : "text-white"
+          `block px-2 py-1 rounded hover:bg-white/20 transition ${isActive ? "font-bold text-yellow-400" : "text-white"
           }`
         }
         to="/"
@@ -58,44 +58,65 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         className={({ isActive }) =>
-          `block px-2 py-1 rounded hover:bg-white/20 transition ${
-            isActive ? "font-bold text-yellow-400" : "text-white"
+          `block px-2 py-1 rounded hover:bg-white/20 transition ${isActive ? "font-bold text-yellow-400" : "text-white"
           }`
         }
         to="/all-jobs"
       >
         All Jobs
       </NavLink>
-      <NavLink
-        className={({ isActive }) =>
-          `block px-2 py-1 rounded hover:bg-white/20 transition ${
-            isActive ? "font-bold text-yellow-400" : "text-white"
-          }`
-        }
-        to="/add-job"
-      >
-        Add a Job
-      </NavLink>
-      <NavLink
-        className={({ isActive }) =>
-          `block px-2 py-1 rounded hover:bg-white/20 transition ${
-            isActive ? "font-bold text-yellow-400" : "text-white"
-          }`
-        }
-        to="/my-posted-jobs"
-      >
-        My Posted Jobs
-      </NavLink>
-      <NavLink
-        className={({ isActive }) =>
-          `block px-2 py-1 rounded hover:bg-white/20 transition ${
-            isActive ? "font-bold text-yellow-400" : "text-white"
-          }`
-        }
-        to="/my-task"
-      >
-        My Tasks
-      </NavLink>
+      {
+        user && (
+          <NavLink
+            className={({ isActive }) =>
+              `block px-2 py-1 rounded hover:bg-white/20 transition ${isActive ? "font-bold text-yellow-400" : "text-white"
+              }`
+            }
+            to="dashboard/add-job"
+          >
+            Add a Job
+          </NavLink>
+        )
+      }
+
+      {
+        user && (
+          <NavLink
+            className={({ isActive }) =>
+              `block px-2 py-1 rounded hover:bg-white/20 transition ${isActive ? "font-bold text-yellow-400" : "text-white"
+              }`
+            }
+            to="dashboard/my-posted-jobs"
+          >
+            My Posted Jobs
+          </NavLink>
+        )
+      }
+      {
+        user && (
+          <NavLink
+            className={({ isActive }) =>
+              `block px-2 py-1 rounded hover:bg-white/20 transition ${isActive ? "font-bold text-yellow-400" : "text-white"
+              }`
+            }
+            to="dashboard/my-task"
+          >
+            My Tasks
+          </NavLink>
+        )
+      }
+      {user && (
+        <NavLink
+          className={({ isActive }) =>
+            `block px-2 py-1 rounded hover:bg-white/20 transition ${isActive ? "font-bold text-yellow-400" : "text-white"
+            }`
+          }
+          to="/dashboard"
+        >
+          Dashboard
+        </NavLink>
+      )}
+
     </>
   );
 
@@ -126,7 +147,7 @@ const Navbar = () => {
             <div className="relative">
               <div
                 className="w-10 h-10 rounded-full border-2 border-gray-300 overflow-hidden cursor-pointer transition-transform hover:scale-105"
-                onClick={() => setShowUserCard(prev => !prev)} // ক্লিক দিয়ে টগল
+                onClick={() => setShowUserCard(prev => !prev)}
               >
                 <img
                   src={user.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
@@ -141,6 +162,13 @@ const Navbar = () => {
                     <p className="font-semibold text-sm text-gray-800 truncate">{user.displayName}</p>
                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   </div>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setShowUserCard(false)}
+                    className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 transition-colors"
+                  > <MdSpaceDashboard /> Dashboard
+                  </Link>
+
                   <button
                     onClick={handleLogOut}
                     className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"

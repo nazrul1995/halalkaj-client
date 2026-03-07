@@ -13,7 +13,7 @@ const WhyChooseUs = () => {
             'Verified Employers',
             'Easy & Secure Application',
           ].map((text, i) => (
-            <div key={i} className="p-6 bg-white dark:bg-slate-800 rounded-xl shadow">
+            <div key={i} className="p-6 bg-white dark:bg-slate-800 rounded-xl shadow border border-gray-300">
               <h3 className="text-lg font-semibold">{text}</h3>
             </div>
           ))}

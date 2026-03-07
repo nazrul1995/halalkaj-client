@@ -16,7 +16,7 @@ const HowItWorks = () => {
           { step: '02', title: 'Browse Jobs', desc: 'Find halal jobs that match your skills' },
           { step: '03', title: 'Apply & Get Hired', desc: 'Apply and communicate with employers' }
         ].map((item, i) => (
-          <div key={i} className="bg-white rounded-xl shadow-md p-6 text-center">
+          <div key={i} className="bg-white rounded-xl shadow-md p-6 text-center border border-gray-300">
             <div className="text-4xl font-bold text-warning mb-3">{item.step}</div>
             <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
             <p className="text-gray-600">{item.desc}</p>

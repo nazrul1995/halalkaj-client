@@ -1,10 +1,14 @@
 import { FaUserCog } from 'react-icons/fa'
 import MenuItem from './MenuItem'
+import { useContext } from 'react'
+import { AuthContext } from '../../../Provider/AuthContext';
 
 const AdminMenu = () => {
+ const { user} = useContext(AuthContext);
   return (
     <>
-      <MenuItem icon={FaUserCog} label='Manage Users' address='manage-users' />
+     { user.email === 'admin@gmail.com' && <MenuItem icon={FaUserCog} label='Manage Role' address='manage-role' />
+     }
     </>
   )
 }

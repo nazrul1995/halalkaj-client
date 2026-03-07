@@ -1,96 +1,99 @@
-import React, { useState } from 'react';
-//import AuthProvider from '../../Provider/AuthProvider';
+import React, { useContext, useState } from "react";
 import { BsGraphUp } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
-import { Link } from 'react-router';
-import MenuItem from './Menu/MenuItem';
-import BuyerMenu from './Menu/BuyerMenu';
-import SellerMenu from './Menu/SellerMenu';
-import AdminMenu from './Menu/AdminMenu';
+import { FiMenu } from "react-icons/fi";
+import { Link } from "react-router";
+import MenuItem from "./Menu/MenuItem";
+import BuyerMenu from "./Menu/BuyerMenu";
+import SellerMenu from "./Menu/SellerMenu";
+import AdminMenu from "./Menu/AdminMenu";
+import Swal from "sweetalert2";
+import { AuthContext } from "../../Provider/AuthContext";
 
 const Sidebar = () => {
-     //const LogOutUser  = AuthProvider()
-     //console.log(LogOutUser)
-  const [isActive, setActive] = useState(false)
-
-  // Sidebar Responsive Handler
-  const handleToggle = () => {
-    setActive(!isActive)
-  }
-   
-    return (
+  const {LogOutUser} = useContext(AuthContext)
+  const [isActive, setIsActive] = useState(false);
+  const handleLogOut = () => {
+    LogOutUser()
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Logged out successfully!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: "error",
+          title: "Logout failed",
+          text: err.message,
+        });
+      });
+  };
+  return (
     <>
-      {/* Small Screen Navbar, only visible till md breakpoint */}
-      <div className='bg-gray-100 text-gray-800 flex justify-between md:hidden'>
-        <div>
-          <div className='block cursor-pointer p-4 font-bold'>
-            <Link to='/'>
-              <h2>HalalKaj</h2>
-            </Link>
-          </div>
-        </div>
-
-        <button
-          onClick={handleToggle}
-          className='mobile-menu-button p-4 focus:outline-none focus:bg-gray-200'
-        >
+      {/* ===== Mobile Navbar ===== */}
+      <div className="md:hidden flex items-center justify-between bg-warning px-4 py-3 text-white shadow-md">
+        <Link to="/" className="text-xl font-bold">
+          Halal<span className="text-green-900">Kaj</span>
+        </Link>
+        <button onClick={() => setIsActive(!isActive)}>
+          <FiMenu size={26} />
         </button>
       </div>
 
-      {/* Sidebar */}
-      <div
-        className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
-          isActive && '-translate-x-full'
-        }  md:translate-x-0  transition duration-200 ease-in-out`}
+      {/* ===== Sidebar ===== */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 shadow-xl transform transition-transform duration-300
+        ${isActive ? "-translate-x-full" : "translate-x-0"}
+        md:translate-x-0`}
       >
-        <div className='flex flex-col h-full'>
-          {/* Top Content */}
-          <div>
-            {/* Logo */}
-            <div className='w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-lime-100 mx-auto'>
-              <Link to='/'>
-                <h2>HalalKaj</h2>
-              </Link>
-            </div>
+        <div className="flex flex-col h-full">
+          {/* ===== Logo ===== */}
+          <div className="hidden md:flex items-center justify-center h-20 border-b bg-warning text-white">
+            <Link to="/" className="text-2xl font-extrabold tracking-wide">
+              Halal<span className="text-green-900">Kaj</span>
+            </Link>
           </div>
 
-          {/* Middle Content */}
-          <div className='flex flex-col justify-between flex-1 mt-6'>
-            {/*  Menu Items */}
-            <nav>
-              {/* Common Menu */}
-              <MenuItem
-                icon={BsGraphUp }
-                label='Statistics'
-                address='/dashboard'
-              />
-              {/* Role-Based Menu */}
-              <BuyerMenu />
-              <SellerMenu />
-              <AdminMenu />
-            </nav>
-          </div>
-
-          {/* Bottom Content */}
-          <div>
-            <hr />
+          {/* ===== Menu ===== */}
+          <nav className="flex-1 px-3 py-6 space-y-1">
+            <p className="px-3 text-xs font-semibold text-gray-400 uppercase mb-2">
+              Dashboard
+            </p>
 
             <MenuItem
-              icon={CgProfile}
-              label='Profile'
-              address='/dashboard/profile'
+              icon={BsGraphUp}
+              label="Statistics"
+              address="/dashboard"
             />
-            <button
-              //onClick={logOut}
-              className='flex cursor-pointer w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform'
+
+            {/* Role Based */}
+            <BuyerMenu />
+            <SellerMenu />
+            <AdminMenu />
+          </nav>
+
+          {/* ===== Bottom Section ===== */}
+          <div className="border-t px-3 py-4">
+            <MenuItem
+              icon={CgProfile}
+              label="Profile"
+              address="/dashboard/profile"
+            />
+
+            <button onClick={handleLogOut}
+              className="flex items-center w-full px-4 py-2 mt-3 rounded-lg
+              text-gray-600 hover:bg-red-50 hover:text-red-600 transition"
             >
-              <span className='mx-4 font-medium'>Logout</span>
+             LogOut
             </button>
           </div>
         </div>
-      </div>
+      </aside>
     </>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
